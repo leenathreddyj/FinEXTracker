@@ -158,6 +158,7 @@ class LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixi
                   ),
                 ),
               ),
+              // sized box as separator
               SizedBox(height: 20.0),
 
               // Animated password field
