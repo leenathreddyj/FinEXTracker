@@ -1,0 +1,2 @@
+/Users/leenathreddy/MAD/project1/FinEXTracker/android/app/.cxx/RelWithDebInfo/192s115d/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/leenathreddy/MAD/project1/FinEXTracker/android/app/.cxx/RelWithDebInfo/192s115d/arm64-v8a/CMakeFiles/rebuild_cache.dir
