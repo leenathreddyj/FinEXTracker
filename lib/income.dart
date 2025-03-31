@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:js/helpers/database_helper.dart';
 import './models/income_model.dart';
 
+//Hassan Coulibaly and Saileenath Reddy
+
 class Income extends StatelessWidget {
   const Income({super.key});
 
