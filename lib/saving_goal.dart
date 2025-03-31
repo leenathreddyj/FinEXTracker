@@ -14,10 +14,10 @@ class GoalHomePage extends StatefulWidget {
   const GoalHomePage({super.key});
 
   @override
-  _GoalHomePageState createState() => _GoalHomePageState();
+  GoalHomePageState createState() => GoalHomePageState();
 }
 
-class _GoalHomePageState extends State<GoalHomePage> {
+class GoalHomePageState extends State<GoalHomePage> {
   final GoalModel goalModel = GoalModel(); // Goal model for FinEXTracker
   final TextEditingController _goalController = TextEditingController();
 
@@ -39,7 +39,7 @@ class _GoalHomePageState extends State<GoalHomePage> {
         setState(() {});
       }
     } catch (e) {
-      print('Error loading goal: $e');
+      // print('Error loading goal: $e'); // Commented out to avoid print in production
     }
   }
 
@@ -57,12 +57,12 @@ class _GoalHomePageState extends State<GoalHomePage> {
       }
 
       setState(() {});
-
+      if (!mounted) return; // Guards ScaffoldMessenger call directly
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Goal saved: \$${newGoal.toStringAsFixed(2)}')),
       );
     } catch (error) {
-      print('Error saving goal: $error');
+      // print('Error saving goal: $error'); // Commented out to avoid print in production
     }
   }
 
@@ -70,7 +70,7 @@ class _GoalHomePageState extends State<GoalHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('FinEXTracker Savings Goal'), // Updated from 'Set Savings Goal'
+        title: Text('FinEXTracker Savings Goal'),
         backgroundColor: Color(0xFF075E54), // WhatsApp dark green
       ),
       body: Padding(
@@ -91,12 +91,10 @@ class _GoalHomePageState extends State<GoalHomePage> {
               controller: _goalController,
               decoration: InputDecoration(
                 labelText: 'Enter New Goal',
-                labelStyle:
-                    TextStyle(color: Color(0xFF075E54)), // WhatsApp dark green
+                labelStyle: TextStyle(color: Color(0xFF075E54)), // WhatsApp dark green
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
-                  borderSide: BorderSide(
-                      color: Color(0xFF25D366)), // WhatsApp light green
+                  borderSide: BorderSide(color: Color(0xFF25D366)), // WhatsApp light green
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Color(0xFF075E54), width: 2.0),

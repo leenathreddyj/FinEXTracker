@@ -15,12 +15,11 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  MyHomePageState createState() => MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class MyHomePageState extends State<MyHomePage> {
   final IncomeModel incomeModel = IncomeModel(); // Income model for FinEXTracker
-
   final TextEditingController _incomeController = TextEditingController();
 
   @override
@@ -41,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() {});
       }
     } catch (e) {
-      print('Error loading income: $e');
+      // print('Error loading income: $e'); // Commented out to avoid print in production
     }
   }
 
@@ -60,13 +59,12 @@ class _MyHomePageState extends State<MyHomePage> {
       }
 
       setState(() {});
-
+      if (!mounted) return; // Guards ScaffoldMessenger call directly
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text('Income saved: \$${newIncome.toStringAsFixed(2)}')),
+        SnackBar(content: Text('Income saved: \$${newIncome.toStringAsFixed(2)}')),
       );
     } catch (error) {
-      print('Error saving income: $error');
+      // print('Error saving income: $error'); // Commented out to avoid print in production
     }
   }
 
@@ -80,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('FinEXTracker Income'), // Updated from 'Income Tracker'
+        title: Text('FinEXTracker Income'),
         backgroundColor: Color(0xFF075E54), // WhatsApp dark green
       ),
       body: Padding(
@@ -101,16 +99,13 @@ class _MyHomePageState extends State<MyHomePage> {
               controller: _incomeController,
               decoration: InputDecoration(
                 labelText: 'Enter New Income',
-                labelStyle:
-                    TextStyle(color: Color(0xFF075E54)), // WhatsApp green
+                labelStyle: TextStyle(color: Color(0xFF075E54)), // WhatsApp green
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
-                  borderSide: BorderSide(
-                      color: Color(0xFF25D366)), // WhatsApp light green
+                  borderSide: BorderSide(color: Color(0xFF25D366)), // WhatsApp light green
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      color: Color(0xFF075E54), width: 2.0), // Dark green
+                  borderSide: BorderSide(color: Color(0xFF075E54), width: 2.0), // Dark green
                   borderRadius: BorderRadius.circular(10.0),
                 ),
               ),

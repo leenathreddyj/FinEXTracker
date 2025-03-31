@@ -4,7 +4,7 @@ import 'investment_tracker.dart';
 import 'income.dart';
 import 'saving_goal.dart';
 import 'helpers/database_helper.dart';
-import 'Reports.dart';
+import 'reports.dart'; // Changed from 'Reports.dart'
 
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key});
@@ -19,10 +19,10 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  HomePageState createState() => HomePageState(); // Changed from _HomePageState
+  HomePageState createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> { // Changed from _HomePageState
+class HomePageState extends State<HomePage> {
   double currentGoal = 0.0; // Current savings goal in FinEXTracker
   double currentIncome = 0.0; // Total income tracked in FinEXTracker
   double totalExpense = 0.0; // Total expenses tracked in FinEXTracker

@@ -23,10 +23,10 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  LoginPageState createState() => LoginPageState(); // Changed from _LoginPageState
+  LoginPageState createState() => LoginPageState();
 }
 
-class LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin { // Changed from _LoginPageState
+class LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
@@ -34,8 +34,6 @@ class LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixi
   late AnimationController _controller;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _fadeAnimation;
-
-  // Removed unused _isLoggedIn field
 
   @override
   void initState() {
@@ -241,10 +239,10 @@ class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
   @override
-  SignupScreenState createState() => SignupScreenState(); // Changed from _SignupScreenState
+  SignupScreenState createState() => SignupScreenState();
 }
 
-class SignupScreenState extends State<SignupScreen> { // Changed from _SignupScreenState
+class SignupScreenState extends State<SignupScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
@@ -289,8 +287,8 @@ class SignupScreenState extends State<SignupScreen> { // Changed from _SignupScr
         child: Column(
           children: [
             TextField(
-              decoration: InputDecoration(labelText: 'Username'), // Moved before controller
-              controller: _usernameController,
+              decoration: InputDecoration(labelText: 'Username'), // Decoration first
+              controller: _usernameController, // Controller last
             ),
             TextField(
               decoration: InputDecoration(labelText: 'Password'),

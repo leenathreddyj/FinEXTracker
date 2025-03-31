@@ -43,7 +43,7 @@ class Reports extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('FinEXTracker Reports'), // Updated from 'Reports'
+        title: Text('FinEXTracker Reports'),
         backgroundColor: Color(0xFF075E54), // WhatsApp dark green
       ),
       body: Padding(
@@ -58,10 +58,8 @@ class Reports extends StatelessWidget {
               },
               children: [
                 _buildTableRow('Budget Goal', '\$${goal.toStringAsFixed(2)}'),
-                _buildTableRow('Current Month Earnings',
-                    '\$${_calculateEarningsitLoss().toStringAsFixed(2)}'),
-                _buildTableRow('Current Month Expenses',
-                    '\$${expenses.toStringAsFixed(2)}'),
+                _buildTableRow('Current Month Earnings', '\$${_calculateEarningsitLoss().toStringAsFixed(2)}'),
+                _buildTableRow('Current Month Expenses', '\$${expenses.toStringAsFixed(2)}'),
                 _buildStatusTableRow('Goal Status', _goalReached()),
               ],
             ),
@@ -85,8 +83,7 @@ class Reports extends StatelessWidget {
                   showChartValuesInPercentage: true,
                   showChartValuesOutside: false,
                   chartValueStyle: TextStyle(
-                    color: const Color.fromARGB(
-                        255, 187, 25, 25), // Red text on chart values
+                    color: const Color.fromARGB(255, 187, 25, 25), // Red text on chart values
                   ),
                 ),
                 colorList: [
