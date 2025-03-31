@@ -18,7 +18,7 @@ class GoalHomePage extends StatefulWidget {
 }
 
 class _GoalHomePageState extends State<GoalHomePage> {
-  final GoalModel goalModel = GoalModel(); // Initialize GoalModel
+  final GoalModel goalModel = GoalModel(); // Goal model for FinEXTracker
   final TextEditingController _goalController = TextEditingController();
 
   @override
@@ -27,6 +27,7 @@ class _GoalHomePageState extends State<GoalHomePage> {
     _loadGoalFromDatabase();
   }
 
+  // Loads the current savings goal from the database
   Future<void> _loadGoalFromDatabase() async {
     try {
       double? savedGoal = await DatabaseHelper.instance.getGoal();
@@ -34,7 +35,7 @@ class _GoalHomePageState extends State<GoalHomePage> {
         goalModel.updateGoal(savedGoal);
         setState(() {});
       } else {
-        goalModel.initialize(0.0); // Set initial default goal
+        goalModel.initialize(0.0); // Default goal if none exists
         setState(() {});
       }
     } catch (e) {
@@ -42,6 +43,7 @@ class _GoalHomePageState extends State<GoalHomePage> {
     }
   }
 
+  // Saves the new savings goal to the database
   void _saveGoal(BuildContext context) async {
     double newGoal = double.tryParse(_goalController.text) ?? 0.0;
     goalModel.updateGoal(newGoal);
@@ -68,7 +70,7 @@ class _GoalHomePageState extends State<GoalHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Set Savings Goal'),
+        title: Text('FinEXTracker Savings Goal'), // Updated from 'Set Savings Goal'
         backgroundColor: Color(0xFF075E54), // WhatsApp dark green
       ),
       body: Padding(
@@ -108,8 +110,7 @@ class _GoalHomePageState extends State<GoalHomePage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF25D366), // WhatsApp light green
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(10.0), // Rounded corners for button
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
                 padding: EdgeInsets.symmetric(vertical: 16.0),
               ),
@@ -119,7 +120,7 @@ class _GoalHomePageState extends State<GoalHomePage> {
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white, // White text on green button
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -136,6 +137,7 @@ class _GoalHomePageState extends State<GoalHomePage> {
   }
 }
 
+// Model for managing the savings goal in FinEXTracker
 class GoalModel {
   double _goal = 0.0;
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:js/helpers/database_helper.dart';
-import 'dashboard.dart'; // Assuming Dashboard class is defined in dashboard.dart
+import 'dashboard.dart'; // Links to FinEXTracker Dashboard
 
 void main() {
   runApp(MyApp());
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'User Signup Demo', // Left as is; change to 'FinEXTracker' if desired
+      title: 'FinEXTracker', // Updated from 'User Signup Demo'
       theme: ThemeData(primarySwatch: Colors.blue),
       home: LoginPage(),
     );
@@ -23,11 +23,10 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState(); // Changed from _LoginPageState
 }
 
-class _LoginPageState extends State<LoginPage>
-    with SingleTickerProviderStateMixin {
+class LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin { // Changed from _LoginPageState
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
@@ -36,56 +35,56 @@ class _LoginPageState extends State<LoginPage>
   late Animation<Offset> _slideAnimation;
   late Animation<double> _fadeAnimation;
 
-  bool _isLoggedIn = false; // Track login state
+  // Removed unused _isLoggedIn field
 
   @override
   void initState() {
     super.initState();
 
-    // Initialize animation controller
+    // Initialize animation controller for login screen
     _controller = AnimationController(
       vsync: this,
       duration: Duration(seconds: 1), // Set animation duration
     );
 
-    // Define slide animation from top to original position
+    // Define slide animation for smooth entry
     _slideAnimation = Tween<Offset>(
       begin: Offset(0, -1), // Start from above
       end: Offset(0, 0),
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
-    // Define fade animation
+    // Define fade animation for smooth entry
     _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeInOut,
     ));
 
-    // Start animation
+    // Start animation on page load
     _controller.forward();
   }
 
   @override
   void dispose() {
     _controller.dispose(); // Dispose the controller
+    _usernameController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
+  // Authenticates user and navigates to Dashboard
   Future<void> _login() async {
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
 
     bool isAuthenticated = await _databaseHelper.verifyUser(username, password);
     if (isAuthenticated) {
-      setState(() {
-        _isLoggedIn = true;
-      });
-
+      if (!mounted) return; // Check if widget is still mounted
       Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) => Dashboard()), // Navigate to dashboard
+        MaterialPageRoute(builder: (context) => Dashboard()), // Navigate to FinEXTracker Dashboard
       );
     } else {
+      if (!mounted) return; // Check if widget is still mounted
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -112,7 +111,7 @@ class _LoginPageState extends State<LoginPage>
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Login'),
-        backgroundColor: Color(0xFF075E54),
+        backgroundColor: Color(0xFF075E54), // WhatsApp dark green
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -123,14 +122,14 @@ class _LoginPageState extends State<LoginPage>
             children: <Widget>[
               SizedBox(height: 50.0),
 
-              // App title (Changed from FinIQ to FinEXTracker)
+              // App title for FinEXTracker
               Center(
                 child: Text(
-                  'FinEXTracker', // Updated here
+                  'FinEXTracker',
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF075E54),
+                    color: Color(0xFF075E54), // WhatsApp dark green
                   ),
                 ),
               ),
@@ -147,8 +146,7 @@ class _LoginPageState extends State<LoginPage>
                       labelText: 'Phone number or email',
                       labelStyle: TextStyle(color: Color(0xFF075E54)),
                       focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Color(0xFF075E54), width: 2.0),
+                        borderSide: BorderSide(color: Color(0xFF075E54), width: 2.0),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       enabledBorder: OutlineInputBorder(
@@ -173,8 +171,7 @@ class _LoginPageState extends State<LoginPage>
                       labelText: 'Password',
                       labelStyle: TextStyle(color: Color(0xFF075E54)),
                       focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Color(0xFF075E54), width: 2.0),
+                        borderSide: BorderSide(color: Color(0xFF075E54), width: 2.0),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       enabledBorder: OutlineInputBorder(
@@ -195,7 +192,7 @@ class _LoginPageState extends State<LoginPage>
                   opacity: _fadeAnimation,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF25D366),
+                      backgroundColor: Color(0xFF25D366), // WhatsApp light green
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
@@ -244,14 +241,15 @@ class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
   @override
-  _SignupScreenState createState() => _SignupScreenState();
+  SignupScreenState createState() => SignupScreenState(); // Changed from _SignupScreenState
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class SignupScreenState extends State<SignupScreen> { // Changed from _SignupScreenState
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
 
+  // Registers a new user for FinEXTracker
   Future<void> _registerUser() async {
     String username = _usernameController.text;
     String password = _passwordController.text;
@@ -259,16 +257,20 @@ class _SignupScreenState extends State<SignupScreen> {
     if (username.isNotEmpty && password.isNotEmpty) {
       try {
         await _databaseHelper.registerUser(username, password);
+        if (!mounted) return; // Check if widget is still mounted
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Registration successful!')),
         );
+        if (!mounted) return; // Check if widget is still mounted
         Navigator.pop(context); // Return to login page
       } catch (e) {
+        if (!mounted) return; // Check if widget is still mounted
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Username already exists.')),
         );
       }
     } else {
+      if (!mounted) return; // Check if widget is still mounted
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please fill all fields.')),
       );
@@ -278,28 +280,44 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Register')),
+      appBar: AppBar(
+        title: Text('FinEXTracker Register'),
+        backgroundColor: Color(0xFF075E54), // WhatsApp dark green
+      ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
+              decoration: InputDecoration(labelText: 'Username'), // Moved before controller
               controller: _usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
             ),
             TextField(
-              controller: _passwordController,
               decoration: InputDecoration(labelText: 'Password'),
+              controller: _passwordController,
               obscureText: true,
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: _registerUser,
               child: Text('Register'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF25D366), // WhatsApp light green
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }

@@ -9,6 +9,8 @@ import './models/transaction.dart';
 import './helpers/database_helper.dart';
 
 class ExpenseTracker extends StatelessWidget {
+  const ExpenseTracker({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MyHomePage();
@@ -16,12 +18,13 @@ class ExpenseTracker extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  MyHomePageState createState() => MyHomePageState(); // Changed from _MyHomePageState
 }
 
-class _MyHomePageState extends State<MyHomePage>
-    with SingleTickerProviderStateMixin {
+class MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin { // Changed from _MyHomePageState
   List<Transaction> _userTransactions = [];
   bool _showChart = false;
 
@@ -33,19 +36,19 @@ class _MyHomePageState extends State<MyHomePage>
   void initState() {
     super.initState();
 
-    // Initialize animation controller
+    // Initialize animation controller for FinEXTracker UI
     _controller = AnimationController(
       vsync: this,
       duration: Duration(seconds: 1), // Set animation duration
     );
 
-    // Slide animation for adding smooth transition
+    // Slide animation for smooth transitions
     _slideAnimation = Tween<Offset>(
       begin: Offset(0, -1), // Start from above
       end: Offset(0, 0),
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
-    // Fade animation for adding smooth transition
+    // Fade animation for smooth transitions
     _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeInOut,
@@ -63,20 +66,18 @@ class _MyHomePageState extends State<MyHomePage>
 
   List<Transaction> get _recentTransactions {
     DateTime lastDayOfPrevWeek = DateTime.now().subtract(Duration(days: 6));
-    lastDayOfPrevWeek = DateTime(
-        lastDayOfPrevWeek.year, lastDayOfPrevWeek.month, lastDayOfPrevWeek.day);
+    lastDayOfPrevWeek = DateTime(lastDayOfPrevWeek.year, lastDayOfPrevWeek.month, lastDayOfPrevWeek.day);
     return _userTransactions.where((element) {
       return element.txnDateTime.isAfter(lastDayOfPrevWeek);
     }).toList();
   }
 
-  _MyHomePageState() {
+  MyHomePageState() { // Changed from _MyHomePageState
     _updateUserTransactionsList();
   }
 
   void _updateUserTransactionsList() {
-    Future<List<Transaction>> res =
-        DatabaseHelper.instance.getAllTransactions();
+    Future<List<Transaction>> res = DatabaseHelper.instance.getAllTransactions();
 
     res.then((txnList) {
       setState(() {
@@ -91,8 +92,7 @@ class _MyHomePageState extends State<MyHomePage>
     });
   }
 
-  Future<void> _addNewTransaction(
-      String title, double amount, String category, DateTime chosenDate) async {
+  Future<void> _addNewTransaction(String title, double amount, String category, DateTime chosenDate) async {
     final newTxn = Transaction(
       DateTime.now().millisecondsSinceEpoch.toString(),
       title,
@@ -114,7 +114,6 @@ class _MyHomePageState extends State<MyHomePage>
       backgroundColor: Colors.transparent,
       builder: (BuildContext bc) {
         return SlideTransition(
-          // Adding animation to modal bottom sheet
           position: _slideAnimation,
           child: Container(
             height: MediaQuery.of(context).size.height * 0.80,
@@ -144,10 +143,9 @@ class _MyHomePageState extends State<MyHomePage>
   Widget build(BuildContext context) {
     final AppBar myAppBar = AppBar(
       title: FadeTransition(
-        // Animated fade-in for title
         opacity: _fadeAnimation,
         child: Text(
-          'Expense Tracker',
+          'FinEXTracker Expenses',
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 20.0,
@@ -158,8 +156,7 @@ class _MyHomePageState extends State<MyHomePage>
     );
 
     MediaQueryData mediaQueryData = MediaQuery.of(context);
-    final bool isLandscape =
-        mediaQueryData.orientation == Orientation.landscape;
+    final bool isLandscape = mediaQueryData.orientation == Orientation.landscape;
 
     final double availableHeight = mediaQueryData.size.height -
         myAppBar.preferredSize.height -
@@ -197,20 +194,13 @@ class _MyHomePageState extends State<MyHomePage>
               ),
             if (isLandscape)
               _showChart
-                  ? myChartContainer(
-                      height: availableHeight * 0.8,
-                      width: 0.6 * availableWidth)
-                  : myTransactionListContainer(
-                      height: availableHeight * 0.8,
-                      width: 0.6 * availableWidth),
+                  ? myChartContainer(height: availableHeight * 0.8, width: 0.6 * availableWidth)
+                  : myTransactionListContainer(height: availableHeight * 0.8, width: 0.6 * availableWidth),
             if (!isLandscape)
-              myCircularChartContainer(
-                  height: availableHeight * 0.2, width: availableWidth),
-            myChartContainer(
-                height: availableHeight * 0.3, width: availableWidth),
+              myCircularChartContainer(height: availableHeight * 0.2, width: availableWidth),
+            myChartContainer(height: availableHeight * 0.3, width: availableWidth),
             if (!isLandscape)
-              myTransactionListContainer(
-                  height: availableHeight * 0.7, width: availableWidth),
+              myTransactionListContainer(height: availableHeight * 0.7, width: availableWidth),
           ],
         ),
       ),
@@ -218,23 +208,21 @@ class _MyHomePageState extends State<MyHomePage>
       floatingActionButton: Platform.isIOS
           ? Container()
           : SlideTransition(
-              position: _slideAnimation, // Animate floating action button
+              position: _slideAnimation,
               child: FloatingActionButton(
                 backgroundColor: Color(0xFF25D366), // WhatsApp light green
-                child: Icon(Icons.add),
                 tooltip: "Add New Transaction",
                 onPressed: () => _startAddNewTransaction(context),
+                child: Icon(Icons.add),
               ),
             ),
     );
   }
 
-  Widget myCircularChartContainer(
-      {required double height, required double width}) {
+  Widget myCircularChartContainer({required double height, required double width}) {
     return FadeTransition(
-      // Animate chart appearance
       opacity: _fadeAnimation,
-      child: Container(
+      child: SizedBox(
         height: height,
         width: width,
         child: CategoryChart(_userTransactions),
@@ -244,9 +232,8 @@ class _MyHomePageState extends State<MyHomePage>
 
   Widget myChartContainer({required double height, required double width}) {
     return FadeTransition(
-      // Animate chart container
       opacity: _fadeAnimation,
-      child: Container(
+      child: SizedBox(
         height: height,
         width: width,
         child: Chart(_recentTransactions),
@@ -254,12 +241,10 @@ class _MyHomePageState extends State<MyHomePage>
     );
   }
 
-  Widget myTransactionListContainer(
-      {required double height, required double width}) {
+  Widget myTransactionListContainer({required double height, required double width}) {
     return FadeTransition(
-      // Animate transaction list
       opacity: _fadeAnimation,
-      child: Container(
+      child: SizedBox(
         height: height,
         width: width,
         child: TransactionList(_userTransactions, _deleteTransaction),

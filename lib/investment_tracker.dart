@@ -6,34 +6,31 @@ import './widgets/investment_list.dart';
 import './helpers/database_helper.dart';
 
 class InvestmentTracker extends StatelessWidget {
+  const InvestmentTracker({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MyHomePage();
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatefulWidget { // Changed from _MyHomePage to MyHomePage
+  const MyHomePage({super.key});
+
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  MyHomePageState createState() => MyHomePageState(); // Changed from _MyHomePageState
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  List<Investment> _userInvestments = [];
+class MyHomePageState extends State<MyHomePage> { // Changed from _MyHomePageState
+  List<Investment> _userInvestments = []; // Investments for FinEXTracker
   bool _showChart = false;
 
-  List<Investment> get _recentInvestments {
-    DateTime lastDayOfPrevWeek = DateTime.now().subtract(Duration(days: 6));
-    lastDayOfPrevWeek = DateTime(
-        lastDayOfPrevWeek.year, lastDayOfPrevWeek.month, lastDayOfPrevWeek.day);
-    return _userInvestments.where((element) {
-      return element.invDateTime.isAfter(lastDayOfPrevWeek);
-    }).toList();
-  }
-
-  _MyHomePageState() {
+  // _MyHomePageState constructor renamed to MyHomePageState
+  MyHomePageState() {
     _updateUserInvestmentsList();
   }
 
+  // Updates the investment list from the database
   void _updateUserInvestmentsList() {
     Future<List<Investment>> res = DatabaseHelper.instance.getAllInvestments();
 
@@ -44,12 +41,14 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  // Toggles chart visibility in landscape mode (currently unused)
   void _showChartHandler(bool show) {
     setState(() {
       _showChart = show;
     });
   }
 
+  // Adds a new investment to the database
   Future<void> _addNewInvestment(
       String title, double amount, DateTime chosenDate) async {
     final newInv = Investment(
@@ -65,6 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  // Opens the modal form to add a new investment
   void _startAddNewInvestment(BuildContext context) {
     showModalBottomSheet<dynamic>(
       isScrollControlled: true,
@@ -86,6 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  // Deletes an investment by ID
   Future<void> _deleteInvestment(String id) async {
     int parsedId = int.tryParse(id) ?? 0;
     int res = await DatabaseHelper.instance.deleteInvestmentById(parsedId);
@@ -98,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final AppBar myAppBar = AppBar(
       title: Text(
-        'Personal Investments',
+        'FinEXTracker Investments',
         style: TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 20.0,
@@ -166,16 +167,17 @@ class _MyHomePageState extends State<MyHomePage> {
           ? Container()
           : FloatingActionButton(
               backgroundColor: Color(0xFF25D366), // WhatsApp light green
-              child: Icon(Icons.add, color: Colors.white),
               tooltip: "Add New Investment",
               onPressed: () => _startAddNewInvestment(context),
+              child: Icon(Icons.add, color: Colors.white),
             ),
     );
   }
 
+  // Container for the investment list
   Widget myInvestmentListContainer(
       {required double height, required double width}) {
-    return Container(
+    return SizedBox(
       height: height,
       width: width,
       child: InvestmentList(_userInvestments, _deleteInvestment),

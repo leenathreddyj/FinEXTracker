@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ChartBar extends StatelessWidget {
-  final String _label;
-  final double _spendingAmount;
-  final double _spendingPctOfTotal;
+  final String _label; // e.g., day or category name in FinEXTracker
+  final double _spendingAmount; // Amount spent in rupees
+  final double _spendingPctOfTotal; // Percentage of total spending
 
-  ChartBar(this._label, this._spendingAmount, this._spendingPctOfTotal);
+  const ChartBar(this._label, this._spendingAmount, this._spendingPctOfTotal, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class ChartBar extends StatelessWidget {
       builder: (ctx, constraints) {
         return Column(
           children: <Widget>[
-            Container(
+            SizedBox(
               height: constraints.maxHeight * 0.16,
               child: FittedBox(
                 child: Text(
@@ -29,7 +29,7 @@ class ChartBar extends StatelessWidget {
             SizedBox(
               height: constraints.maxHeight * 0.04,
             ),
-            Container(
+            SizedBox(
               height: constraints.maxHeight * 0.6,
               width: 12, // Increased bar width for clarity
               child: Stack(
@@ -61,7 +61,7 @@ class ChartBar extends StatelessWidget {
             SizedBox(
               height: constraints.maxHeight * 0.04,
             ),
-            Container(
+            SizedBox(
               height: constraints.maxHeight * 0.16,
               child: FittedBox(
                 child: Text(

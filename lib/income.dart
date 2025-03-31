@@ -19,7 +19,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final IncomeModel incomeModel = IncomeModel(); // Initialize IncomeModel
+  final IncomeModel incomeModel = IncomeModel(); // Income model for FinEXTracker
 
   final TextEditingController _incomeController = TextEditingController();
 
@@ -29,6 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _loadIncomeFromDatabase();
   }
 
+  // Loads the current income from the database for FinEXTracker
   Future<void> _loadIncomeFromDatabase() async {
     try {
       double? savedIncome = await DatabaseHelper.instance.getIncome();
@@ -36,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
         incomeModel.updateIncome(savedIncome);
         setState(() {});
       } else {
-        incomeModel.initialize(0.0); // Set your initial default income here
+        incomeModel.initialize(0.0); // Default income if none exists
         setState(() {});
       }
     } catch (e) {
@@ -44,6 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  // Saves the new income value to the database
   void _saveIncome(BuildContext context) async {
     double newIncome = double.tryParse(_incomeController.text) ?? 0.0;
     incomeModel.updateIncome(newIncome);
@@ -78,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Income Tracker'),
+        title: Text('FinEXTracker Income'), // Updated from 'Income Tracker'
         backgroundColor: Color(0xFF075E54), // WhatsApp dark green
       ),
       body: Padding(
@@ -119,8 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF25D366), // WhatsApp light green
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                      10.0), // Rounded corners for the button
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
                 padding: EdgeInsets.symmetric(vertical: 16.0),
               ),
@@ -130,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white, // White text on green button
+                  color: Colors.white,
                 ),
               ),
             ),

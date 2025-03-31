@@ -2,24 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
 
 class Reports extends StatelessWidget {
-  final double income;
-  final double expenses;
-  final double investments;
-  final double goal;
+  final double income; // Income tracked in FinEXTracker
+  final double expenses; // Expenses tracked in FinEXTracker
+  final double investments; // Investments tracked in FinEXTracker
+  final double goal; // Savings goal set in FinEXTracker
 
   Reports(this.income, this.expenses, this.investments, this.goal, {super.key}) {
     _calculateProfitLoss();
   }
 
+  // Calculates profit or loss (income + investments - expenses)
   double _calculateProfitLoss() {
     double profitOrLoss = income + investments - expenses;
     return profitOrLoss;
   }
 
+  // Calculates total earnings (income + investments)
   double _calculateEarningsitLoss() {
     return income + investments;
   }
 
+  // Determines if the savings goal is reached
   String _goalReached() {
     double profitOrLoss = _calculateProfitLoss();
     if (profitOrLoss >= goal) {
@@ -31,7 +34,7 @@ class Reports extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Data map for PieChart
+    // Data map for PieChart in FinEXTracker Reports
     Map<String, double> dataMap = {
       "Income": income,
       "Expenses": expenses,
@@ -40,7 +43,7 @@ class Reports extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Reports'),
+        title: Text('FinEXTracker Reports'), // Updated from 'Reports'
         backgroundColor: Color(0xFF075E54), // WhatsApp dark green
       ),
       body: Padding(
@@ -83,7 +86,7 @@ class Reports extends StatelessWidget {
                   showChartValuesOutside: false,
                   chartValueStyle: TextStyle(
                     color: const Color.fromARGB(
-                        255, 187, 25, 25), // White text on chart values
+                        255, 187, 25, 25), // Red text on chart values
                   ),
                 ),
                 colorList: [
@@ -99,6 +102,7 @@ class Reports extends StatelessWidget {
     );
   }
 
+  // Builds a standard table row for financial data
   TableRow _buildTableRow(String field, String value) {
     return TableRow(
       children: [
@@ -131,10 +135,11 @@ class Reports extends StatelessWidget {
     );
   }
 
+  // Builds a table row for goal status with dynamic coloring
   TableRow _buildStatusTableRow(String field, String value) {
     Color statusColor = _calculateProfitLoss() >= goal
-        ? Color(0xFF25D366)
-        : Colors.red; // WhatsApp green or red based on goal status
+        ? Color(0xFF25D366) // WhatsApp light green for success
+        : Colors.red; // Red for failure
 
     return TableRow(
       children: [

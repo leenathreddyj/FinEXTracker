@@ -2,20 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class NewTransactionForm extends StatefulWidget {
-  final Function _addTransaction; // Callback to add a transaction in FinEXTracker
+  final Function _addTransaction;
 
   const NewTransactionForm(this._addTransaction, {super.key});
 
   @override
-  _NewTransactionFormState createState() => _NewTransactionFormState();
+  NewTransactionFormState createState() => NewTransactionFormState(); // Changed from _NewTransactionFormState
 }
 
-class _NewTransactionFormState extends State<NewTransactionForm> {
-  final _titleController = TextEditingController();
-  final _amountController = TextEditingController();
-  final _dateController = TextEditingController();
-  final _timeController = TextEditingController();
-  final _categoryController = TextEditingController();
+class NewTransactionFormState extends State<NewTransactionForm> { // Changed from _NewTransactionFormState
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _titleFocus = FocusNode();
   final _amountFocus = FocusNode();
@@ -23,9 +22,8 @@ class _NewTransactionFormState extends State<NewTransactionForm> {
   final _timeFocus = FocusNode();
   final _categoryFocus = FocusNode();
 
-  bool _autoValidateToggle = false;
   late DateTime _selectedDate = DateTime.now();
-  TimeOfDay? _selectedTime;
+  TimeOfDay? _selectedTime; // Kept to use in txnDateTime
   String _selectedCategory = 'Fashion'; // Default category
 
   final List<String> _categories = [
@@ -46,14 +44,13 @@ class _NewTransactionFormState extends State<NewTransactionForm> {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: today,
-      firstDate: firstDate, // Start of current month
-      lastDate: lastDate, // End of current month
+      firstDate: firstDate,
+      lastDate: lastDate,
     );
     if (pickedDate != null && pickedDate != _selectedDate) {
       setState(() {
         _selectedDate = pickedDate;
-        _dateController.value =
-            TextEditingValue(text: DateFormat('d/M/y').format(pickedDate));
+        _dateController.value = TextEditingValue(text: DateFormat('d/M/y').format(pickedDate));
       });
     }
   }
@@ -83,8 +80,7 @@ class _NewTransactionFormState extends State<NewTransactionForm> {
   }
 
   // Moves focus between form fields
-  void _fieldFocusChange(
-      BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
+  void _fieldFocusChange(BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
     currentFocus.unfocus();
     FocusScope.of(context).requestFocus(nextFocus);
   }
@@ -95,11 +91,16 @@ class _NewTransactionFormState extends State<NewTransactionForm> {
       final txnTitle = _titleController.text;
       final txnAmount = double.parse(_amountController.text);
       final txnCategory = _selectedCategory;
-      final txnDateTime = DateTime(
-        _selectedDate.year,
-        _selectedDate.month,
-        _selectedDate.day,
-      );
+      // Use _selectedTime if available, otherwise default to midnight
+      final txnDateTime = _selectedTime != null
+          ? DateTime(
+              _selectedDate.year,
+              _selectedDate.month,
+              _selectedDate.day,
+              _selectedTime!.hour,
+              _selectedTime!.minute,
+            )
+          : DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
 
       widget._addTransaction(
         txnTitle,
@@ -108,9 +109,7 @@ class _NewTransactionFormState extends State<NewTransactionForm> {
         txnDateTime,
       );
       Navigator.of(context).pop();
-    } else {
-      _autoValidateToggle = true;
-    }
+    } // Removed else block with _autoValidateToggle
   }
 
   @override
@@ -122,9 +121,7 @@ class _NewTransactionFormState extends State<NewTransactionForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            SizedBox(
-              height: 15.0,
-            ),
+            SizedBox(height: 15.0),
             TextFormField(
               decoration: InputDecoration(
                 labelText: 'Title',
@@ -139,14 +136,11 @@ class _NewTransactionFormState extends State<NewTransactionForm> {
                 return null;
               },
               focusNode: _titleFocus,
-              onEditingComplete: () =>
-                  _fieldFocusChange(context, _titleFocus, _amountFocus),
+              onEditingComplete: () => _fieldFocusChange(context, _titleFocus, _amountFocus),
               controller: _titleController,
               textInputAction: TextInputAction.next,
             ),
-            SizedBox(
-              height: 20.0,
-            ),
+            SizedBox(height: 20.0),
             TextFormField(
               focusNode: _amountFocus,
               decoration: InputDecoration(
@@ -168,9 +162,7 @@ class _NewTransactionFormState extends State<NewTransactionForm> {
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
             ),
-            SizedBox(
-              height: 20.0,
-            ),
+            SizedBox(height: 20.0),
             DropdownButtonFormField<String>(
               decoration: InputDecoration(
                 labelText: 'Category',
@@ -199,9 +191,7 @@ class _NewTransactionFormState extends State<NewTransactionForm> {
               },
               focusNode: _categoryFocus,
             ),
-            SizedBox(
-              height: 20.0,
-            ),
+            SizedBox(height: 20.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
@@ -215,8 +205,7 @@ class _NewTransactionFormState extends State<NewTransactionForm> {
                         keyboardType: TextInputType.datetime,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(25.0)),
+                            borderRadius: BorderRadius.all(Radius.circular(25.0)),
                           ),
                           labelText: 'Date',
                           hintText: 'Date of Transaction',
@@ -231,9 +220,7 @@ class _NewTransactionFormState extends State<NewTransactionForm> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 10.0,
-                ),
+                SizedBox(width: 10.0),
                 Expanded(
                   child: GestureDetector(
                     onTap: () => _selectTime(context),
@@ -244,8 +231,7 @@ class _NewTransactionFormState extends State<NewTransactionForm> {
                         keyboardType: TextInputType.datetime,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(25.0)),
+                            borderRadius: BorderRadius.all(Radius.circular(25.0)),
                           ),
                           labelText: 'Time',
                           hintText: 'Time of Transaction',
@@ -253,7 +239,7 @@ class _NewTransactionFormState extends State<NewTransactionForm> {
                           suffixIcon: Icon(Icons.arrow_drop_down),
                         ),
                         validator: (value) {
-                          if (value!.isEmpty) return "Please select a time"; // Updated for clarity
+                          if (value!.isEmpty) return "Please select a time";
                           return null;
                         },
                       ),
@@ -262,9 +248,7 @@ class _NewTransactionFormState extends State<NewTransactionForm> {
                 ),
               ],
             ),
-            SizedBox(
-              height: 20.0,
-            ),
+            SizedBox(height: 20.0),
             SizedBox(
               width: double.infinity,
               height: 55.0,

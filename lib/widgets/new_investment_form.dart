@@ -2,30 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class NewInvestmentForm extends StatefulWidget {
-  final Function _addInvestment; // Callback to add an investment in FinEXTracker
+  final Function _addInvestment;
 
   const NewInvestmentForm(this._addInvestment, {super.key});
 
   @override
-  _NewInvestmentFormState createState() => _NewInvestmentFormState();
+  NewInvestmentFormState createState() => NewInvestmentFormState(); // Changed from _NewInvestmentFormState
 }
 
-class _NewInvestmentFormState extends State<NewInvestmentForm> {
-  final _titleController = TextEditingController();
-  final _amountController = TextEditingController();
-  final _dateController = TextEditingController();
-  final _timeController = TextEditingController();
+class NewInvestmentFormState extends State<NewInvestmentForm> { // Changed from _NewInvestmentFormState
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _titleFocus = FocusNode();
   final _amountFocus = FocusNode();
   final _dateFocus = FocusNode();
   final _timeFocus = FocusNode();
 
-  bool _autoValidateToggle = false;
   late DateTime _selectedDate = DateTime.now();
-  TimeOfDay? _selectedTime;
+  TimeOfDay? _selectedTime; // Kept to use in invDateTime
 
-  // Opens date picker for investment date selection
   Future<Null> _selectDate(BuildContext context) async {
     final today = DateTime.now();
     DateTime firstDate = DateTime(today.year, today.month, 1);
@@ -33,19 +31,17 @@ class _NewInvestmentFormState extends State<NewInvestmentForm> {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: today,
-      firstDate: firstDate, // Start of current month
-      lastDate: lastDate, // End of current month
+      firstDate: firstDate,
+      lastDate: lastDate,
     );
     if (pickedDate != null && pickedDate != _selectedDate) {
       setState(() {
         _selectedDate = pickedDate;
-        _dateController.value =
-            TextEditingValue(text: DateFormat('d/M/y').format(pickedDate));
+        _dateController.value = TextEditingValue(text: DateFormat('d/M/y').format(pickedDate));
       });
     }
   }
 
-  // Opens time picker for investment time selection
   Future<Null> _selectTime(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
@@ -69,23 +65,25 @@ class _NewInvestmentFormState extends State<NewInvestmentForm> {
     }
   }
 
-  // Moves focus between form fields
-  void _fieldFocusChange(
-      BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
+  void _fieldFocusChange(BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
     currentFocus.unfocus();
     FocusScope.of(context).requestFocus(nextFocus);
   }
 
-  // Submits the investment form data
   void _onSubmit() {
     if (_formKey.currentState!.validate()) {
       final invTitle = _titleController.text;
       final invAmount = double.parse(_amountController.text);
-      final invDateTime = DateTime(
-        _selectedDate.year,
-        _selectedDate.month,
-        _selectedDate.day,
-      );
+      // Use _selectedTime if available, otherwise default to midnight
+      final invDateTime = _selectedTime != null
+          ? DateTime(
+              _selectedDate.year,
+              _selectedDate.month,
+              _selectedDate.day,
+              _selectedTime!.hour,
+              _selectedTime!.minute,
+            )
+          : DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
 
       widget._addInvestment(
         invTitle,
@@ -93,9 +91,7 @@ class _NewInvestmentFormState extends State<NewInvestmentForm> {
         invDateTime,
       );
       Navigator.of(context).pop();
-    } else {
-      _autoValidateToggle = true;
-    }
+    } // Removed else block with _autoValidateToggle
   }
 
   @override
@@ -107,9 +103,7 @@ class _NewInvestmentFormState extends State<NewInvestmentForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            SizedBox(
-              height: 15.0,
-            ),
+            SizedBox(height: 15.0),
             TextFormField(
               decoration: InputDecoration(
                 labelText: 'Title',
@@ -124,14 +118,11 @@ class _NewInvestmentFormState extends State<NewInvestmentForm> {
                 return null;
               },
               focusNode: _titleFocus,
-              onEditingComplete: () =>
-                  _fieldFocusChange(context, _titleFocus, _amountFocus),
+              onEditingComplete: () => _fieldFocusChange(context, _titleFocus, _amountFocus),
               controller: _titleController,
               textInputAction: TextInputAction.next,
             ),
-            SizedBox(
-              height: 20.0,
-            ),
+            SizedBox(height: 20.0),
             TextFormField(
               focusNode: _amountFocus,
               decoration: InputDecoration(
@@ -153,9 +144,7 @@ class _NewInvestmentFormState extends State<NewInvestmentForm> {
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
             ),
-            SizedBox(
-              height: 20.0,
-            ),
+            SizedBox(height: 20.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
@@ -169,8 +158,7 @@ class _NewInvestmentFormState extends State<NewInvestmentForm> {
                         keyboardType: TextInputType.datetime,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(25.0)),
+                            borderRadius: BorderRadius.all(Radius.circular(25.0)),
                           ),
                           labelText: 'Date',
                           hintText: 'Date of Investment',
@@ -185,9 +173,7 @@ class _NewInvestmentFormState extends State<NewInvestmentForm> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 10.0,
-                ),
+                SizedBox(width: 10.0),
                 Expanded(
                   child: GestureDetector(
                     onTap: () => _selectTime(context),
@@ -198,8 +184,7 @@ class _NewInvestmentFormState extends State<NewInvestmentForm> {
                         keyboardType: TextInputType.datetime,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(25.0)),
+                            borderRadius: BorderRadius.all(Radius.circular(25.0)),
                           ),
                           labelText: 'Time',
                           hintText: 'Time of Investment',
@@ -207,7 +192,7 @@ class _NewInvestmentFormState extends State<NewInvestmentForm> {
                           suffixIcon: Icon(Icons.arrow_drop_down),
                         ),
                         validator: (value) {
-                          if (value!.isEmpty) return "Please select a time"; // Updated for clarity
+                          if (value!.isEmpty) return "Please select a time";
                           return null;
                         },
                       ),
@@ -216,9 +201,7 @@ class _NewInvestmentFormState extends State<NewInvestmentForm> {
                 ),
               ],
             ),
-            SizedBox(
-              height: 20.0,
-            ),
+            SizedBox(height: 20.0),
             SizedBox(
               width: double.infinity,
               height: 55.0,

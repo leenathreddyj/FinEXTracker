@@ -1,10 +1,12 @@
+// Model for representing a transaction in FinEXTracker
 class Transaction {
-  String _id;
-  String _title;
-  double _amount;
-  String _category;
-  DateTime _date;
+  final String _id; // Unique identifier for the transaction
+  final String _title; // Title or name of the transaction
+  final double _amount; // Transaction amount in FinEXTracker
+  final String _category; // Category of the transaction (e.g., Food, Housing)
+  final DateTime _date; // Date and time of the transaction
 
+  // Public getters for accessing transaction properties
   String get txnId => _id;
   String get txnTitle => _title;
   double get txnAmount => _amount;
@@ -15,32 +17,28 @@ class Transaction {
   Transaction(
     this._id,
     this._title,
-    this._amount, // Initialize _amount in the constructor parameters
+    this._amount, // Transaction amount passed during creation
     this._category,
     this._date,
   );
 
-  // Convenience constructor to create a Transaction object from a map
+  // Creates a Transaction object from a database map
   Transaction.fromMap(Map<String, dynamic> map)
       : _id = map['id'].toString(),
         _title = map['title'],
-        _amount = map['amount'] ?? 0.0, // Provide a default value if map['amount'] is null
+        _amount = map['amount'] ?? 0.0, // Default to 0.0 if amount is null
         _category = map['category'],
         _date = DateTime.parse(map['date']);
 
-  // Convenience method to create a map from this Transaction object
+  // Converts this Transaction object to a map for database storage
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      'id': int.tryParse(_id),
+      'id': int.tryParse(_id), // Parse ID as integer if possible
       'title': _title,
       'amount': _amount,
-      'category' : _category,
-      'date': _date.toIso8601String(),
+      'category': _category,
+      'date': _date.toIso8601String(), // Store date in ISO format
     };
-    //if (_id != null) {
-      map['id'] = int.tryParse(_id);
-    //}
-
     return map;
   }
 }
