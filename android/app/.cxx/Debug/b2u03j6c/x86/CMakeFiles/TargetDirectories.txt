@@ -1,0 +1,2 @@
+/Users/leenathreddy/MAD/project1/FinEXTracker/android/app/.cxx/Debug/b2u03j6c/x86/CMakeFiles/edit_cache.dir
+/Users/leenathreddy/MAD/project1/FinEXTracker/android/app/.cxx/Debug/b2u03j6c/x86/CMakeFiles/rebuild_cache.dir
