@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:js/helpers/database_helper.dart';
 import 'dashboard.dart'; // Links to FinEXTracker Dashboard
 
+// Hassan Coulibaly
+
 void main() {
   runApp(MyApp());
 }
