@@ -184,6 +184,7 @@ class HomePageState extends State<HomePage> {
                   ),
                   padding: EdgeInsets.symmetric(vertical: 16.0),
                 ),
+                // function behavior added here
                 onPressed: () => _navigateToInvestmentTracker(context),
                 child: Text(
                   'Investment management',
