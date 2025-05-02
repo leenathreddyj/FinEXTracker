@@ -7,7 +7,7 @@
 ---
 ######
 YouTube Demo
-For a video walkthrough of FinIQ, check out our https://youtu.be/mUGl3vk6Yeo
+For a video walkthrough of FinIQ, check out our https://www.youtube.com/watch?v=ImzrehImsOI&t=5s)
 ######
 
 
