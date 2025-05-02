@@ -1,8 +1,8 @@
 # FinIQ
 
 ### Developed by:
-- **Madhu Sudhan Reddy Konda**
-- **Sri Haneesha Davuluri**
+- **Venkata Saileenath Reddy Jampala**
+- 
 
 ---
 ######
